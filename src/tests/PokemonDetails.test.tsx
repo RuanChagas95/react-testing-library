@@ -30,8 +30,16 @@ describe('As informações detalhadas do Pokémon selecionado são mostradas na 
     expect(image[0]).toHaveAttribute('src', 'https://archives.bulbagarden.net/media/upload/0/08/Kanto_Route_2_Map.png');
     expect(image[1]).toHaveAttribute('src', 'https://archives.bulbagarden.net/media/upload/b/bd/Kanto_Celadon_City_Map.png');
   });
-  it('É exibido na tela uma label com o texto Pokémon favoritado?', () => {
+  it('É exibido na tela uma label com o texto Pokémon favoritado?', async () => {
     renderWithRouter(<App />, { route });
     screen.getByText(/Pokémon favoritado\?/i);
+  });
+  it('Checkbox checked renderiza a imagem de favorito', async () => {
+    const { queryByAltText, user } = renderWithRouter(<App />, { route });
+    const checkbox = screen.getByRole('checkbox');
+    expect(checkbox).not.toBeChecked();
+    expect(queryByAltText(/Pikachu is marked as favorite/i)).not.toBeInTheDocument();
+    await user.click(checkbox);
+    screen.getByAltText(/Pikachu is marked as favorite/i);
   });
 });
